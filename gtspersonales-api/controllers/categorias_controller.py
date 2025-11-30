@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
 from models.categoria import Categoria, CategoriaCreate, CategoriaUpdate
 from services.categoria_service import CategoriaService
-from idlelib.colorizer import DEBUG
+#from idlelib.colorizer import DEBUG
 
 router = APIRouter(prefix="/api/categorias", tags=["categorias"])
 

@@ -3,9 +3,10 @@ Script de debug para la app de Gastos Personales
 Ejecutar: python debug_app.py
 """
 
-import sys
+#import sys
 import os
 import importlib
+#import get_connection from app.models.database
 
 def verificar_imports():
     """Verificar que todos los imports funcionan"""
@@ -43,8 +44,8 @@ def verificar_base_datos():
     print("\n🔍 VERIFICANDO BASE DE DATOS...")
     
     try:
-        from models.database import get_db_connection
-        conn = get_db_connection()
+        from app.models.database import get_connection
+        conn = get_connection()
         if conn:
             print("✅ Conexión a BD exitosa")
             

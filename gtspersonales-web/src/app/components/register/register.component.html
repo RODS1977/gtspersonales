@@ -1,0 +1,152 @@
+<div class="row justify-content-center mt-4">
+  <div class="col-md-8 col-lg-6">
+    <div class="card shadow">
+      <div class="card-header bg-success text-white text-center">
+        <h4 class="mb-0">
+          <i class="bi bi-person-plus me-2"></i>
+          Crear Cuenta
+        </h4>
+      </div>
+      <div class="card-body">
+        <!-- Mensajes de éxito y error -->
+        <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+          {{ successMessage }}
+        </div>
+
+        <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ errorMessage }}
+          <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+        </div>
+
+        <!-- Formulario Reactive (Model Driven) -->
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <!-- Campo Nombre -->
+            <div class="col-md-12 mb-3">
+              <label for="nombre" class="form-label">
+                <i class="bi bi-person me-1"></i>
+                Nombre Completo
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="nombre"
+                formControlName="nombre"
+                [class.is-invalid]="nombre?.invalid && nombre?.touched"
+                placeholder="Ingresa tu nombre completo"
+              >
+              <div class="invalid-feedback" *ngIf="nombre?.errors?.['required'] && nombre?.touched">
+                El nombre es requerido
+              </div>
+              <div class="invalid-feedback" *ngIf="nombre?.errors?.['minlength'] && nombre?.touched">
+                El nombre debe tener al menos 3 caracteres
+              </div>
+            </div>
+
+            <!-- Campo Correo -->
+            <div class="col-md-12 mb-3">
+              <label for="correo" class="form-label">
+                <i class="bi bi-envelope me-1"></i>
+                Correo Electrónico
+              </label>
+              <input
+                type="email"
+                class="form-control"
+                id="correo"
+                formControlName="correo"
+                [class.is-invalid]="correo?.invalid && correo?.touched"
+                placeholder="usuario@ejemplo.com"
+              >
+              <div class="invalid-feedback" *ngIf="correo?.errors?.['required'] && correo?.touched">
+                El correo electrónico es requerido
+              </div>
+              <div class="invalid-feedback" *ngIf="correo?.errors?.['email'] && correo?.touched">
+                Ingresa un correo electrónico válido
+              </div>
+            </div>
+
+            <!-- Campo Contraseña -->
+            <div class="col-md-6 mb-3">
+              <label for="password" class="form-label">
+                <i class="bi bi-key me-1"></i>
+                Contraseña
+              </label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                formControlName="password"
+                [class.is-invalid]="password?.invalid && password?.touched"
+                placeholder="Mínimo 6 caracteres"
+              >
+              <div class="invalid-feedback" *ngIf="password?.errors?.['required'] && password?.touched">
+                La contraseña es requerida
+              </div>
+              <div class="invalid-feedback" *ngIf="password?.errors?.['minlength'] && password?.touched">
+                La contraseña debe tener al menos 6 caracteres
+              </div>
+            </div>
+
+            <!-- Campo Confirmar Contraseña -->
+            <div class="col-md-6 mb-3">
+              <label for="confirmPassword" class="form-label">
+                <i class="bi bi-key-fill me-1"></i>
+                Confirmar Contraseña
+              </label>
+              <input
+                type="password"
+                class="form-control"
+                id="confirmPassword"
+                formControlName="confirmPassword"
+                [class.is-invalid]="(confirmPassword?.invalid || registerForm.errors?.['passwordMismatch']) && confirmPassword?.touched"
+                placeholder="Repite la contraseña"
+              >
+              <div class="invalid-feedback" *ngIf="confirmPassword?.errors?.['required'] && confirmPassword?.touched">
+                Debes confirmar la contraseña
+              </div>
+              <div class="invalid-feedback" *ngIf="registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched">
+                Las contraseñas no coinciden
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón de envío -->
+          <div class="d-grid mb-3">
+            <button
+              type="submit"
+              class="btn btn-success"
+              [disabled]="registerForm.invalid || isLoading"
+            >
+              <span *ngIf="!isLoading">
+                <i class="bi bi-person-plus me-1"></i>
+                Registrarse
+              </span>
+              <span *ngIf="isLoading">
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Procesando...
+              </span>
+            </button>
+          </div>
+
+          <!-- Enlaces adicionales -->
+          <div class="text-center">
+            <p class="mb-0">
+              ¿Ya tienes cuenta?
+              <a routerLink="/login" class="text-decoration-none">
+                Inicia sesión aquí
+              </a>
+            </p>
+          </div>
+        </form>
+
+        <!-- Visualización del estado del formulario (para depuración) -->
+        <div class="mt-4 small text-muted" *ngIf="false"> <!-- Cambiar a true para depurar -->
+          <h6>Estado del Formulario:</h6>
+          <pre>Válido: {{ registerForm.valid }}</pre>
+          <pre>Errores: {{ registerForm.errors | json }}</pre>
+          <pre>Valores: {{ registerForm.value | json }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

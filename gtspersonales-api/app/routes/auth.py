@@ -1,5 +1,8 @@
 from flask import Blueprint, request
-from flask_jwt_extended import get_jwt_identity, jwt_required, get_jwt
+from flask_jwt_extended import get_jwt_identity, get_jwt, jwt_required as _jwt_required
+from typing import Any, cast
+# Cast jwt_required to Any to avoid partial/unknown typing from flask_jwt_extended stubs
+jwt_required = cast(Any, _jwt_required)
 from services.auth_service import AuthService
 
 auth_bp = Blueprint('auth', __name__)

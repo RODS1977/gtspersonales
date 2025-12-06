@@ -89,17 +89,16 @@ def validar_monto(monto: Optional[Union[int, float, str]]) -> bool:
         if monto is None:
             return False
         
-        # Convertir a float si es string
-        if isinstance(monto, str):
-            monto = float(monto)
+        # Intentar convertir cualquier valor numérico o string a float
+        monto = float(monto)
         
-        # Verificar que sea numérico y positivo
-        return isinstance(monto, (int, float)) and monto > 0
+        # Verificar que sea positivo
+        return monto > 0
     
     except (ValueError, TypeError):
         return False
 
-def validar_fecha(fecha_str: Optional[str], formato: str = '%Y-%m-%d') -> bool:
+def validar_fecha(fecha_str: Optional[str], formato: str = '%Y-%m-%d', allow_future: bool = False) -> bool:
     """
     Validar formato de fecha
     
@@ -117,10 +116,11 @@ def validar_fecha(fecha_str: Optional[str], formato: str = '%Y-%m-%d') -> bool:
         # Verificar formato
         fecha = datetime.strptime(fecha_str, formato)
         
-        # Verificar que no sea fecha futura (para gastos)
-        hoy = datetime.now()
-        if fecha.date() > hoy.date():
-            return False
+        # Verificar que no sea fecha futura si no está permitido
+        if not allow_future:
+            hoy = datetime.now()
+            if fecha.date() > hoy.date():
+                return False
         
         return True
     

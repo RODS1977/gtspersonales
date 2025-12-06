@@ -1,0 +1,107 @@
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6 col-lg-4">
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white text-center">
+        <h4 class="mb-0">
+          <i class="bi bi-box-arrow-in-right me-2"></i>
+          Iniciar Sesión
+        </h4>
+      </div>
+      <div class="card-body">
+        <!-- Mensaje de error -->
+        <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ errorMessage }}
+          <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+        </div>
+
+        <!-- Formulario Template Driven -->
+        <form #loginForm="ngForm" (ngSubmit)="onLogin()">
+          <!-- Campo Correo -->
+          <div class="mb-3">
+            <label for="correo" class="form-label">
+              <i class="bi bi-envelope me-1"></i>
+              Correo Electrónico
+            </label>
+            <input
+              type="email"
+              class="form-control"
+              id="correo"
+              name="correo"
+              [(ngModel)]="credentials.correo"
+              #correo="ngModel"
+              required
+              email
+              placeholder="usuario@ejemplo.com"
+              [class.is-invalid]="correo.invalid && correo.touched"
+            >
+            <div class="invalid-feedback" *ngIf="correo.errors?.['required'] && correo.touched">
+              El correo electrónico es requerido
+            </div>
+            <div class="invalid-feedback" *ngIf="correo.errors?.['email'] && correo.touched">
+              Ingresa un correo electrónico válido
+            </div>
+          </div>
+
+          <!-- Campo Contraseña -->
+          <div class="mb-3">
+            <label for="password" class="form-label">
+              <i class="bi bi-key me-1"></i>
+              Contraseña
+            </label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              [(ngModel)]="credentials.password"
+              #password="ngModel"
+              required
+              minlength="6"
+              placeholder="Mínimo 6 caracteres"
+              [class.is-invalid]="password.invalid && password.touched"
+            >
+            <div class="invalid-feedback" *ngIf="password.errors?.['required'] && password.touched">
+              La contraseña es requerida
+            </div>
+            <div class="invalid-feedback" *ngIf="password.errors?.['minlength'] && password.touched">
+              La contraseña debe tener al menos 6 caracteres
+            </div>
+          </div>
+
+          <!-- Botón de envío -->
+          <div class="d-grid mb-3">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="loginForm.invalid || isLoading"
+            >
+              <span *ngIf="!isLoading">
+                <i class="bi bi-box-arrow-in-right me-1"></i>
+                Iniciar Sesión
+              </span>
+              <span *ngIf="isLoading">
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Procesando...
+              </span>
+            </button>
+          </div>
+
+          <!-- Enlaces adicionales -->
+          <div class="text-center">
+            <p class="mb-2">
+              ¿No tienes cuenta?
+              <a routerLink="/register" class="text-decoration-none">
+                Regístrate aquí
+              </a>
+            </p>
+            <p class="mb-0">
+              <a href="#" class="text-decoration-none small">
+                ¿Olvidaste tu contraseña?
+              </a>
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

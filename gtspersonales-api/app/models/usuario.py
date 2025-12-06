@@ -33,13 +33,13 @@
 #     correo: EmailStr
 #     password: str
 
-from models.database import get_db_connection
+from app.models.database import get_connection
 import pymysql
 
 class Usuario:
     @staticmethod
     def crear(nombre, correo, password_hash):
-        conn = get_db_connection()
+        conn = get_connection()
         try:
             with conn.cursor() as cursor:
                 cursor.execute(
@@ -58,7 +58,7 @@ class Usuario:
 
     @staticmethod
     def obtener_por_correo(correo):
-        conn = get_db_connection()
+        conn = get_connection()
         try:
             with conn.cursor() as cursor:
                 cursor.execute(
@@ -75,7 +75,7 @@ class Usuario:
 
     @staticmethod
     def obtener_por_id(usuario_id):
-        conn = get_db_connection()
+        conn = get_connection()
         try:
             with conn.cursor() as cursor:
                 cursor.execute(
@@ -92,7 +92,7 @@ class Usuario:
 
     @staticmethod
     def actualizar_password(usuario_id, nuevo_password_hash):
-        conn = get_db_connection()
+        conn = get_connection()
         try:
             with conn.cursor() as cursor:
                 cursor.execute(
@@ -105,6 +105,27 @@ class Usuario:
             print(f"Error al actualizar password: {e}")
             conn.rollback()
             return False
+        finally:
+            if conn:
+                conn.close()
+
+    @staticmethod
+    def obtener_por_usuario(usuario_id):
+        conn = get_connection()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute("""
+                    SELECT g.id, c.nombre as categoria, g.monto, g.fecha, g.descripcion,
+                           g.fecha_creacion, g.fecha_actualizacion
+                    FROM gastos g
+                    JOIN categorias c ON g.categoria_id = c.id
+                    WHERE g.usuario_id = %s
+                    ORDER BY g.fecha DESC, g.fecha_creacion DESC
+                """, (usuario_id,))
+                return cursor.fetchall()
+        except pymysql.Error as e:
+            print(f"Error al obtener gastos: {e}")
+            return []
         finally:
             if conn:
                 conn.close()

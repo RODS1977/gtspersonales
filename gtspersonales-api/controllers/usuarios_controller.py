@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from typing import List
-from models.usuario import Usuario, UsuarioCreate, UsuarioUpdate
-from services.usuario_service import UsuarioService
+from typing import List # type: ignore
+from app.models.usuario import Usuario #UsuarioCreate, UsuarioUpdate
+from app.services.usuario_service import UsuarioService
 from idlelib.colorizer import DEBUG
 from pydantic import BaseModel, EmailStr
 

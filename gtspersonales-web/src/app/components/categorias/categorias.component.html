@@ -1,0 +1,250 @@
+<div class="container-fluid">
+  <!-- Encabezado -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="text-primary">
+          <i class="bi bi-tags me-2"></i>
+          Gestión de Categorías
+        </h2>
+        <button class="btn btn-primary" (click)="abrirModalNuevaCategoria()">
+          <i class="bi bi-plus-circle me-1"></i>
+          Nueva Categoría
+        </button>
+      </div>
+      <p class="text-muted mb-0">
+        Administra las categorías para organizar tus gastos
+      </p>
+    </div>
+  </div>
+
+  <!-- Mensajes -->
+  <div class="row mb-3">
+    <div class="col-12">
+      <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ successMessage }}
+        <button type="button" class="btn-close" (click)="successMessage = ''"></button>
+      </div>
+      <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ errorMessage }}
+        <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarjetas de categorías -->
+  <div class="row">
+    <div class="col-12">
+      <!-- Loading -->
+      <div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-2 text-muted">Cargando categorías...</p>
+      </div>
+
+      <!-- Grid de categorías -->
+      <div *ngIf="!isLoading" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <!-- Tarjeta para cada categoría -->
+        <div class="col" *ngFor="let categoria of categorias">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                  <h5 class="card-title mb-1">
+                    <i class="bi bi-tag me-2"></i>
+                    {{ categoria.nombre }}
+                  </h5>
+                  <p class="card-text text-muted small mb-0">
+                    {{ categoria.descripcion }}
+                  </p>
+                </div>
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                          type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical"></i>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a class="dropdown-item" href="javascript:void(0)" 
+                         (click)="abrirModalEditarCategoria(categoria)">
+                        <i class="bi bi-pencil me-2"></i>
+                        Editar
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item text-danger" href="javascript:void(0)"
+                         (click)="confirmarEliminarCategoria(categoria)">
+                        <i class="bi bi-trash me-2"></i>
+                        Eliminar
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-3">
+                <small class="text-muted">
+                  <i class="bi bi-calendar me-1"></i>
+                  Creada: {{ formatearFecha(categoria.fecha_creacion) }}
+                </small>
+                <br>
+                <small class="text-muted">
+                  <i class="bi bi-arrow-repeat me-1"></i>
+                  Actualizada: {{ formatearFecha(categoria.fecha_actualizacion) }}
+                </small>
+              </div>
+            </div>
+            <div class="card-footer bg-transparent border-top-0 pt-0">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="badge bg-secondary">ID: {{ categoria.id }}</span>
+                <button class="btn btn-sm btn-outline-primary" 
+                        (click)="abrirModalEditarCategoria(categoria)">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mensaje cuando no hay categorías -->
+        <div *ngIf="categorias.length === 0" class="col-12">
+          <div class="card shadow-sm border-dashed text-center">
+            <div class="card-body py-5">
+              <i class="bi bi-tags fs-1 text-muted mb-3"></i>
+              <h5 class="text-muted">No hay categorías registradas</h5>
+              <p class="text-muted mb-4">
+                Las categorías te ayudan a organizar y clasificar tus gastos
+              </p>
+              <button class="btn btn-primary" (click)="abrirModalNuevaCategoria()">
+                <i class="bi bi-plus-circle me-1"></i>
+                Crear primera categoría
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Información -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card bg-light border-0">
+        <div class="card-body">
+          <h6 class="card-title">
+            <i class="bi bi-info-circle me-2"></i>
+            Información sobre categorías
+          </h6>
+          <ul class="mb-0">
+            <li>Las categorías te ayudan a organizar tus gastos por tipo</li>
+            <li>Puedes editar o eliminar categorías en cualquier momento</li>
+            <li>Cada gasto debe estar asociado a una categoría</li>
+            <li>Se recomienda crear categorías generales como: Comida, Transporte, Entretenimiento, etc.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para crear/editar categoría -->
+<ng-template #modalCategoria let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">
+      <i class="bi" [class.bi-plus-circle]="!modoEdicion" [class.bi-pencil]="modoEdicion"></i>
+      {{ modoEdicion ? 'Editar Categoría' : 'Nueva Categoría' }}
+    </h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="categoriaForm">
+      <!-- Nombre -->
+      <div class="mb-3">
+        <label class="form-label">Nombre de la Categoría *</label>
+        <input type="text" class="form-control" formControlName="nombre"
+               [class.is-invalid]="nombre?.invalid && nombre?.touched"
+               placeholder="Ej: Comida, Transporte, Entretenimiento">
+        <div class="invalid-feedback" *ngIf="nombre?.errors?.['required'] && nombre?.touched">
+          El nombre es requerido
+        </div>
+        <div class="invalid-feedback" *ngIf="nombre?.errors?.['minlength'] && nombre?.touched">
+          El nombre debe tener al menos 3 caracteres
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div class="mb-3">
+        <label class="form-label">Descripción *</label>
+        <textarea class="form-control" formControlName="descripcion" rows="3"
+                  [class.is-invalid]="descripcion?.invalid && descripcion?.touched"
+                  placeholder="Describe el tipo de gastos que pertenecen a esta categoría..."></textarea>
+        <div class="invalid-feedback" *ngIf="descripcion?.errors?.['required'] && descripcion?.touched">
+          La descripción es requerida
+        </div>
+        <div class="invalid-feedback" *ngIf="descripcion?.errors?.['minlength'] && descripcion?.touched">
+          La descripción debe tener al menos 5 caracteres
+        </div>
+      </div>
+
+      <!-- Información de la categoría (solo en edición) -->
+      <div *ngIf="modoEdicion && categoriaSeleccionada" class="alert alert-info small">
+        <div class="row">
+          <div class="col-6">
+            <strong>ID:</strong> {{ categoriaSeleccionada.id }}
+          </div>
+          <div class="col-6">
+            <strong>Creada:</strong> {{ formatearFecha(categoriaSeleccionada.fecha_creacion) }}
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">
+      Cancelar
+    </button>
+    <button type="button" class="btn btn-primary" 
+            (click)="guardarCategoria()"
+            [disabled]="categoriaForm.invalid || isLoading">
+      <span *ngIf="!isLoading">
+        <i class="bi" [class.bi-save]="modoEdicion" [class.bi-plus-circle]="!modoEdicion"></i>
+        {{ modoEdicion ? 'Actualizar' : 'Crear' }}
+      </span>
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
+    </button>
+  </div>
+</ng-template>
+
+<!-- Modal de confirmación para eliminar -->
+<ng-template #modalConfirmacion let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title text-danger">
+      <i class="bi bi-exclamation-triangle me-2"></i>
+      Confirmar Eliminación
+    </h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="alert alert-warning">
+      <i class="bi bi-exclamation-octagon me-2"></i>
+      <strong>Advertencia:</strong> Si esta categoría tiene gastos asociados, no podrás eliminarla.
+    </div>
+    <p>
+      ¿Estás seguro de que deseas eliminar la categoría 
+      <strong>"{{ categoriaAEliminar?.nombre }}"</strong>?
+    </p>
+    <p class="text-muted small mb-0">
+      {{ categoriaAEliminar?.descripcion }}
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">
+      Cancelar
+    </button>
+    <button type="button" class="btn btn-danger" (click)="eliminarCategoria()" [disabled]="isLoading">
+      <span *ngIf="!isLoading">Eliminar</span>
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
+    </button>
+  </div>
+</ng-template>

@@ -1,11 +1,11 @@
-from models.database import get_db_connection
+from app.models.database import get_connection
 from datetime import datetime
 import pymysql
 
 class TokenBlacklist:
     @staticmethod
     def revocar_token(jti, user_id):
-        conn = get_db_connection()
+        conn = get_connection()
         try:
             with conn.cursor() as cursor:
                 cursor.execute(
@@ -23,7 +23,7 @@ class TokenBlacklist:
 
     @staticmethod
     def esta_revocado(jti):
-        conn = get_db_connection()
+        conn = get_connection()
         try:
             with conn.cursor() as cursor:
                 cursor.execute(

@@ -40,13 +40,13 @@
 #     nombre_usuario: Optional[str] = None
 #     nombre_categoria: Optional[str] = None
 
-from models.database import get_db_connection
+from app.models.database import get_connection
 import pymysql
 
 class Gasto:
     @staticmethod
     def crear(usuario_id, categoria_id, monto, fecha, descripcion):
-        conn = get_db_connection()
+        conn = get_connection()
         try:
             with conn.cursor() as cursor:
                 cursor.execute(
@@ -66,7 +66,7 @@ class Gasto:
 
     @staticmethod
     def obtener_por_usuario(usuario_id):
-        conn = get_db_connection()
+        conn = get_connection()
         try:
             with conn.cursor() as cursor:
                 cursor.execute("""

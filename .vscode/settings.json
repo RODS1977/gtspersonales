@@ -1,5 +1,9 @@
 {
     "python.analysis.extraPaths": [
         "./gtspersonales-api"
-    ]
+    ],
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportUnknownMemberType": "none"
+    }
 }

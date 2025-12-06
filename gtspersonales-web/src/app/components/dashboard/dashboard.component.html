@@ -1,0 +1,181 @@
+<div class="dashboard">
+  <!-- Encabezado -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2 class="text-primary">
+        <i class="bi bi-speedometer2 me-2"></i>
+        Dashboard
+      </h2>
+      <p class="text-muted">
+        Bienvenido, <strong>{{ userName }}</strong>. Aquí tienes un resumen de tus gastos.
+      </p>
+    </div>
+  </div>
+
+  <!-- Tarjetas de estadísticas -->
+  <div class="row mb-4">
+    <!-- Total de Gastos -->
+    <div class="col-md-3 mb-3">
+      <div class="card border-primary h-100">
+        <div class="card-body text-center">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h6 class="card-subtitle text-muted">Total Gastos</h6>
+              <h3 class="card-title text-primary">{{ formatCurrency(estadisticas.totalGastos) }}</h3>
+            </div>
+            <i class="bi bi-cash-stack text-primary fs-1"></i>
+          </div>
+          <p class="card-text small text-muted">Acumulado total</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gastos del Mes -->
+    <div class="col-md-3 mb-3">
+      <div class="card border-success h-100">
+        <div class="card-body text-center">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h6 class="card-subtitle text-muted">Este Mes</h6>
+              <h3 class="card-title text-success">{{ formatCurrency(estadisticas.gastosMes) }}</h3>
+            </div>
+            <i class="bi bi-calendar-month text-success fs-1"></i>
+          </div>
+          <p class="card-text small text-muted">Gastos del mes actual</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gastos de Hoy -->
+    <div class="col-md-3 mb-3">
+      <div class="card border-info h-100">
+        <div class="card-body text-center">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h6 class="card-subtitle text-muted">Hoy</h6>
+              <h3 class="card-title text-info">{{ formatCurrency(estadisticas.gastosHoy) }}</h3>
+            </div>
+            <i class="bi bi-calendar-day text-info fs-1"></i>
+          </div>
+          <p class="card-text small text-muted">Gastos de hoy</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Categoría más usada -->
+    <div class="col-md-3 mb-3">
+      <div class="card border-warning h-100">
+        <div class="card-body text-center">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h6 class="card-subtitle text-muted">Categoría Favorita</h6>
+              <h3 class="card-title text-warning">{{ estadisticas.categoriaMasUsada }}</h3>
+            </div>
+            <i class="bi bi-tag text-warning fs-1"></i>
+          </div>
+          <p class="card-text small text-muted">Categoría más utilizada</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Últimos gastos y acciones rápidas -->
+  <div class="row">
+    <!-- Últimos gastos -->
+    <div class="col-lg-8 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="bi bi-receipt me-2"></i>
+            Últimos Gastos
+          </h5>
+          <a routerLink="/gastos" class="btn btn-sm btn-outline-primary">
+            Ver todos <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Descripción</th>
+                  <th>Categoría</th>
+                  <th>Monto</th>
+                  <th>Fecha</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let gasto of ultimosGastos">
+                  <td>{{ gasto.descripcion }}</td>
+                  <td>
+                    <span class="badge bg-secondary">{{ gasto.categoria }}</span>
+                  </td>
+                  <td class="fw-bold text-danger">{{ formatCurrency(gasto.monto) }}</td>
+                  <td>{{ gasto.fecha }}</td>
+                </tr>
+                <tr *ngIf="ultimosGastos.length === 0">
+                  <td colspan="4" class="text-center text-muted py-4">
+                    <i class="bi bi-receipt fs-1 d-block mb-2"></i>
+                    No hay gastos registrados
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Acciones rápidas -->
+    <div class="col-lg-4 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">
+            <i class="bi bi-lightning me-2"></i>
+            Acciones Rápidas
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="d-grid gap-3">
+            <a routerLink="/gastos/nuevo" class="btn btn-primary btn-lg">
+              <i class="bi bi-plus-circle me-2"></i>
+              Nuevo Gasto
+            </a>
+            
+            <a routerLink="/categorias" class="btn btn-outline-secondary">
+              <i class="bi bi-tags me-2"></i>
+              Administrar Categorías
+            </a>
+            
+            <button class="btn btn-outline-info">
+              <i class="bi bi-graph-up me-2"></i>
+              Ver Reportes
+            </button>
+            
+            <button class="btn btn-outline-warning">
+              <i class="bi bi-download me-2"></i>
+              Exportar Datos
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información adicional -->
+      <div class="card shadow mt-3">
+        <div class="card-body">
+          <h6 class="card-title">
+            <i class="bi bi-info-circle me-2"></i>
+            Consejo del Día
+          </h6>
+          <p class="card-text small">
+            Lleva un registro diario de tus gastos pequeños. 
+            Esos gastos "insignificantes" pueden sumar una cantidad importante al final del mes.
+          </p>
+          <div class="text-end">
+            <small class="text-muted">Actualizado: {{ currentDate | date:'dd/MM/yyyy' }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

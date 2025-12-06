@@ -1,0 +1,46 @@
+:host {
+  display: block;
+}
+
+.dashboard {
+  padding: 1rem 0;
+}
+
+.card {
+  border-radius: 0.75rem;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.card.border-primary {
+  border-width: 2px;
+}
+
+.card.border-success {
+  border-width: 2px;
+}
+
+.card.border-info {
+  border-width: 2px;
+}
+
+.card.border-warning {
+  border-width: 2px;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(13, 110, 253, 0.05);
+}
+
+.btn-lg {
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.btn-outline-secondary, .btn-outline-info, .btn-outline-warning {
+  padding: 0.75rem 1.5rem;
+}

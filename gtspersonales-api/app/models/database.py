@@ -1,6 +1,7 @@
-from models.database_config import db_config
+from typing import Any
+from config.database import db_config
 
-def get_db_connection():
+def get_connection() -> Any:
     """
     Obtener conexión a la base de datos
     """

@@ -1,13 +1,13 @@
 from flask import jsonify
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
 
 def success_response(
     message: str, 
     data: Optional[Any] = None, 
     status_code: int = 200,
-    **additional_fields
-) -> tuple:
+    **additional_fields: dict[str, Any]
+) -> tuple[Any, int]:
     """
     Crear una respuesta de éxito estandarizada
     
@@ -40,8 +40,8 @@ def error_response(
     errors: Optional[List[str]] = None, 
     status_code: int = 400,
     error_type: Optional[str] = None,
-    **additional_fields
-) -> tuple:
+    **additional_fields: dict[str, Any]
+) -> tuple[Any, int]:
     """
     Crear una respuesta de error estandarizada
     
@@ -76,7 +76,7 @@ def error_response(
 def validation_error_response(
     errors: List[str],
     message: str = "Errores de validación en los datos proporcionados"
-) -> tuple:
+) -> tuple[Any, int]:
     """
     Crear una respuesta de error de validación específica
     
@@ -97,7 +97,7 @@ def validation_error_response(
 def not_found_response(
     resource: str = "Recurso",
     resource_id: Optional[Any] = None
-) -> tuple:
+) -> tuple[Any, int]:
     """
     Crear una respuesta de recurso no encontrado
     
@@ -120,7 +120,7 @@ def not_found_response(
 
 def unauthorized_response(
     message: str = "No autorizado para acceder a este recurso"
-) -> tuple:
+) -> tuple[Any, int]:
     """
     Crear una respuesta de no autorizado
     
@@ -138,7 +138,7 @@ def unauthorized_response(
 
 def forbidden_response(
     message: str = "No tiene permisos para realizar esta acción"
-) -> tuple:
+) -> tuple[Any, int]:
     """
     Crear una respuesta de prohibido (sin permisos)
     
@@ -158,7 +158,7 @@ def internal_error_response(
     message: str = "Error interno del servidor",
     include_debug_info: bool = False,
     debug_info: Optional[str] = None
-) -> tuple:
+) -> tuple[Any, int]:
     """
     Crear una respuesta de error interno del servidor
     
@@ -188,7 +188,7 @@ def paginated_response(
     page: int,
     per_page: int,
     message: str = "Datos obtenidos exitosamente"
-) -> tuple:
+) -> tuple[Any, int]:
     """
     Crear una respuesta paginada estandarizada
     
@@ -229,20 +229,20 @@ def get_current_timestamp() -> str:
     Returns:
         str: Timestamp en formato ISO
     """
-    return datetime.utcnow().isoformat() + 'Z'
+    return datetime.now(timezone.utc).isoformat()
 
 # Alias para mantener compatibilidad con código existente
-def jsonify_success(message: str, data: Optional[Any] = None, status_code: int = 200) -> tuple:
+def jsonify_success(message: str, data: Optional[Any] = None, status_code: int = 200) -> tuple[Any, int]:
     return success_response(message, data, status_code)
 
-def jsonify_error(message: str, errors: Optional[List[str]] = None, status_code: int = 400) -> tuple:
+def jsonify_error(message: str, errors: Optional[List[str]] = None, status_code: int = 400) -> tuple[Any, int]:
     return error_response(message, errors, status_code)
 
-def jsonify_validation_error(errors: List[str]) -> tuple:
+def jsonify_validation_error(errors: List[str]) -> tuple[Any, int]:
     return validation_error_response(errors)
 
 # Respuestas específicas para la API de Gastos
-def gasto_creado_response(gasto_data: Dict[str, Any]) -> tuple:
+def gasto_creado_response(gasto_data: Dict[str, Any]) -> tuple[Any, int]:
     """
     Respuesta específica para gasto creado exitosamente
     """
@@ -252,7 +252,7 @@ def gasto_creado_response(gasto_data: Dict[str, Any]) -> tuple:
         status_code=201
     )
 
-def gasto_actualizado_response(gasto_data: Dict[str, Any]) -> tuple:
+def gasto_actualizado_response(gasto_data: Dict[str, Any]) -> tuple[Any, int]:
     """
     Respuesta específica para gasto actualizado exitosamente
     """
@@ -262,7 +262,7 @@ def gasto_actualizado_response(gasto_data: Dict[str, Any]) -> tuple:
         status_code=200
     )
 
-def gasto_eliminado_response(gasto_data: Dict[str, Any]) -> tuple:
+def gasto_eliminado_response(gasto_data: Dict[str, Any]) -> tuple[Any, int]:
     """
     Respuesta específica para gasto eliminado exitosamente
     """
@@ -272,7 +272,7 @@ def gasto_eliminado_response(gasto_data: Dict[str, Any]) -> tuple:
         status_code=200
     )
 
-def usuario_registrado_response(usuario_data: Dict[str, Any]) -> tuple:
+def usuario_registrado_response(usuario_data: Dict[str, Any]) -> tuple[Any, int]:
     """
     Respuesta específica para usuario registrado exitosamente
     """
@@ -282,7 +282,7 @@ def usuario_registrado_response(usuario_data: Dict[str, Any]) -> tuple:
         status_code=201
     )
 
-def login_exitoso_response(usuario_data: Dict[str, Any]) -> tuple:
+def login_exitoso_response(usuario_data: Dict[str, Any]) -> tuple[Any, int]:
     """
     Respuesta específica para login exitoso
     """
